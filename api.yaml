@@ -1,0 +1,949 @@
+swagger: '2.0'
+info: 
+ title: "Pet clinic"
+ version: "1.0.0"
+ description: "Pet clinic apis"
+ contact:
+    email: ahmad@gmail.com
+liscence:
+    name: Apache 2.0
+    url: "http://www.apache.org/liscences/LIS"
+servers:
+    -url: http://localhost:8080
+    description: THis is my local Server
+    -url: http://example.com/
+    description: This is my original URL
+schemes: [http,https]
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: x-access-token'  # Adjust based on your token format, e.g., 'x-access-token'
+
+security:
+  - bearerAuth: []  # This enforces security for all endpoints
+
+#Return Users From get request
+paths:
+  # /string:
+  #   get:
+  #     summary: Returns a string.
+  #     description: String Chechup
+  #     responses:
+  #       200:    # status code
+  #         description: Successul Response
+  #         schema: 
+  #           type: string
+  #           example: "Users String"
+  #       400:
+  #         description: User Error
+  #         schema: 
+  #           type: string
+  #           example: "Some Error "
+
+
+
+
+
+
+#Returns api status
+  /:
+    get:
+      summary: Returns the running apis status.
+      description: Welcome Message
+      responses:
+        200:    # status code
+          description: Successul Response
+
+
+
+
+#Defining Body Reference
+#Post json/body & Body required
+  /api/auth/signin:
+    post:
+      summary: Signin
+      tags:
+        - Auth
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            required:
+              - username
+              - password
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        '200':
+          description: OK
+
+
+#Get return stats for dashboard
+  /api/dashboard:
+    get:
+      summary: Returns stats for dahsboard.
+      tags: 
+        - Dashboard
+      description: Returns the array of stats.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+#Get return stats for doctors
+  /api/doctors:
+    get:
+      summary: Returns array of doctors.
+      description: Returns the array of doctors.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Get return stats for clicnics
+  /api/clinics:
+    get:
+      summary: Returns array of clinics.
+      description: Returns the array of clinics.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+#Get return stats for medicines
+  /api/medicines:
+    get:
+      summary: Returns array of medicines.
+      description: Returns the array of medicines.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+
+
+
+#Get Request with path id
+  /api/user/{id}:
+    get:
+      summary: Returns a user by ID.
+      tags:
+        - Auth
+      description: Returns the Specific User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+            
+#File Upload Multiform Data
+  /api/user/editprofileimage/{id}:
+    post:
+      summary: Upload Image for Inferring
+      tags:
+        - Auth
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: formData
+          name: image
+          type: file
+          required: true
+          description: The file to upload.
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        200:
+          description: Successful Response
+        400:
+          description: User Error
+        500:
+          description: Internal Server Error
+
+#Post Request with path id
+  /api/user/edit/{id}:
+    post:
+      summary: Update a user .
+      tags:
+        - Auth
+      description: Update and returns the Specific User
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              firstname:
+                type: string
+              lastname:
+                type: string
+              email:
+                type: string
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+  
+
+ #Pet apis
+
+#Get Request with path id
+  /api/pet/{id}:
+    get:
+      summary: Returns a pet by ID.
+      tags:
+        - Falcon
+      description: Returns the Specific Pet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Get Pet Admissions
+  /api/pet-admission/{petId}:
+    get:
+      summary: Returns a admission of pet by ID.
+      tags:
+        - Falcon
+      description: Returns the admission of pet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Get Request with path id
+  /api/pets:
+    get:
+      summary: Returns array of pets.
+      tags:
+        - Falcon
+      description: Returns the array of pets.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+#Get Request with path id
+  /api/pit-nos:
+    get:
+      summary: Returns array of pit-nos.
+      tags:
+        - Falcon
+      description: Returns the array of  pit-nos.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+            
+#Pet Post Request with path id
+  /api/pet/add:
+    post:
+      summary: Add a pet .
+      tags:
+        - Falcon
+      description: Add and returns the Specific Pet
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              breed:
+                type: string
+              ring_no_left:
+                type: string
+              ring_no_right:
+                type: string
+              pit_no:
+                type: string
+              sex:
+                type: string
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+          
+#Pet Post Request with path id
+  /api/pet/edit/{id}:
+    post:
+      summary: Update a pet .
+      tags:
+        - Falcon
+      description: Update and returns the Specific Pet
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              breed:
+                type: string
+              ring_no_left:
+                type: string
+              ring_no_right:
+                type: string
+              pit_no:
+                type: string
+              sex:
+                type: string
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+            
+
+
+#Examination apis
+#Get Request with path id
+  /api/examinations:
+    get:
+      summary: Returns array of examinations.
+      description: Returns the array of examinations.
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Get Request with path id
+  /api/examination/{id}:
+    get:
+      summary: Returns a examination by ID.
+      description: Returns the Specific Pet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Post json/body & Body required
+  /api/examination/edit/{id}:
+    post:
+      summary: Examination Update
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              petAdmissionId:
+                type: string
+                required: true
+              petId:
+                type: string
+                required: true
+              diagnosis:
+                type: string
+              allergy_to_isoflorane_or_other_antesthetics:
+                type: string
+              others:
+                type: string
+              history_a:
+                type: string
+              history_b:
+                type: string
+              history_c:
+                type: string
+              history_d:
+                type: string
+              full_checkup:
+                type: boolean
+              crop_checkup:
+                type: boolean
+              blood_and_crop:
+                type: boolean
+              feather_repairing:
+                type: boolean
+              coping:
+                type: boolean
+              marshal_clip:
+                type: boolean
+              others:
+                type: boolean
+                
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: examination created
+  
+#Post json/body & Body required
+  /api/examination/add:
+    post:
+      summary: Examination Add
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              petAdmissionId:
+                type: string
+                required: true
+              petId:
+                type: string
+                required: true
+              diagnosis:
+                type: string
+              allergy_to_isoflorane_or_other_antesthetics:
+                type: string
+              others:
+                type: string
+              history_a:
+                type: string
+              history_b:
+                type: string
+              history_c:
+                type: string
+              history_d:
+                type: string
+              full_checkup:
+                type: boolean
+              crop_checkup:
+                type: boolean
+              blood_and_crop:
+                type: boolean
+              feather_repairing:
+                type: boolean
+              coping:
+                type: boolean
+              marshal_clip:
+                type: boolean
+              others:
+                type: boolean
+
+
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: examination created
+
+
+# examination medicine
+
+#Post json/body & Body required
+  /api/examination-medicine/add:
+    post:
+      summary: Examination Medicine Add
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              examinationId:
+                type: string
+                required: true
+              medicineId:
+                type: string
+                required: true
+              medicine_type:
+                type: string
+              dose:
+                type: string
+              times_daily:
+                type: string
+              before_food:
+                type: boolean
+              after_food:
+                type: boolean
+              duration:
+                type: string
+
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: examination medicine created
+
+#Get Request with path id
+  /api/examination-medicine/{examinationId}:
+    get:
+      summary: Returns a examination medicine by examinationId.
+      description: Returns the Specific examinatian medicine
+      parameters:
+        - name: examinationId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+# examination lab test
+
+#Post json/body & Body required
+  /api/examination-lab-test/add:
+    post:
+      summary: Examination Medicine Add
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              examinationId:
+                type: string
+                required: true
+              name:
+                type: string
+              result:
+                type: string     
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: examination lab test created
+
+#Get Admission examinations
+  /api/examination-lab-test/{examinationId}:
+    get:
+      summary: Returns a examinations lab test by examinationId.
+      tags:
+        - Falcon
+      description: Returns the examinations lab test
+      parameters:
+        - name: examinationId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+#Admission apis
+#Post json/body & Body required  
+  /api/admission/add:
+    post:
+      summary: admission add
+      tags:
+        - Falcon
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              pit_no:
+                type: string
+              breed:
+                type: string
+              sex:
+                type: string
+              ring_no_left:
+                type: string
+              ring_no_right:
+                type: string
+              date:
+                type: string
+              trainer_name:
+                type: string
+              mobile:
+                type: string
+              previos_trainer_name:
+                type: string
+              presented_by_worker:
+                type: string
+              clinicId:
+                type: string
+              doctorId:
+                type: string
+              age:
+                type: string
+              primary_patient_evaluation:
+                type: string
+              weight:
+                type: string
+              feathers:
+                type: string
+              physical_appearance:
+                type: string
+              dehydration_status:
+                type: string
+              any_wound_or_laceration_on_the_body:
+                type: string
+              appetite_status_and_eating_behavior:
+                type: string
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: admission created
+
+#Post json/body & Body required  
+  /api/admission/edit/{petAdmissionId}:
+    post:
+      summary: admission update
+      tags:
+        - Falcon
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: petAdmissionId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              pit_no:
+                type: string
+              breed:
+                type: string
+              sex:
+                type: string
+              ring_no_left:
+                type: string
+              ring_no_right:
+                type: string
+              date:
+                type: string
+              trainer_name:
+                type: string
+              mobile:
+                type: string
+              previos_trainer_name:
+                type: string
+              presented_by_worker:
+                type: string
+              clinicId:
+                type: string
+              doctorId:
+                type: string
+              age:
+                type: string
+              primary_patient_evaluation:
+                type: string
+              weight:
+                type: string
+              feathers:
+                type: string
+              physical_appearance:
+                type: string
+              dehydration_status:
+                type: string
+              any_wound_or_laceration_on_the_body:
+                type: string
+              appetite_status_and_eating_behavior:
+                type: string
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: admission created
+
+#Get Admission examinations
+  /api/admission-examination/{petAdmissionId}:
+    get:
+      summary: Returns a examinations of Admission by petAdmissionId.
+      tags:
+        - Falcon
+      description: Returns the examinations of Admission
+      parameters:
+        - name: petAdmissionId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+#Get Admission examinations
+  /api/admission/delete/{petAdmissionId}:
+    get:
+      summary: delete  Admission by petAdmissionId.
+      tags:
+        - Falcon
+      description: delete the Admission 
+      parameters:
+        - name: petAdmissionId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
+#Get Admission examinations
+  /api/admission/report/{petAdmissionId}:
+    get:
+      summary: Report Admission by petAdmissionId.
+      tags:
+        - Falcon
+      description: Report the Admission 
+      parameters:
+        - name: petAdmissionId
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+
+
